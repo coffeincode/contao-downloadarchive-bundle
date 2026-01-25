@@ -3,10 +3,10 @@ services:
         autowire: true
         autoconfigure: true
 
-    Coffeincode\ContaoDummyBundle\:
-        resource: '../src/*'
-        exclude: '../src/{ContaoManager,DependencyInjection,ContaoDummyBundle.php}'
+    Coffeincode\ContaoDownloadarchiveBundle\:
+        resource: '../ContaoDownloadarchiveBundle/*'
+        exclude: '../ContaoDownloadarchiveBundle/{ContaoManager,DependencyInjection,ContaoDownloadarchiveBundle.php}'
 
-    Coffeincode\ContaoDummyBundle\EventListener\DataContainer\DummyItemLabelCallback:
+    Coffeincode\ContaoDownloadarchiveBundle\EventListener\DataContainer\DownloadarchiveitemLabelCallback:
         tags:
-            - { name: contao.callback, table: tl_dummy_item, target: list.label.label_callback, method: __invoke }
+            - { name: contao.callback, table: tl_downloadarchiveitems, target: list.label.label_callback, method: __invoke }

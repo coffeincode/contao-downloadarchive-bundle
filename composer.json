@@ -1,7 +1,7 @@
 {
-  "name": "coffeincode/contao-dummy-bundle",
+  "name": "coffeincode/contao-downloadarchive-bundle",
   "type": "contao-bundle",
-  "description": "Dummy for 5.3",
+  "description": "Downloadarchive for 5.3",
   "license": "Apache",
   "authors": [
     {
@@ -15,10 +15,10 @@
   },
   "autoload": {
     "psr-4": {
-      "Coffeincode\\ContaoDummyBundle\\": "src/"
+      "Coffeincode\\ContaoDownloadarchiveBundle\\": "ContaoDownloadarchiveBundle/"
     }
   },
   "extra": {
-    "contao-manager-plugin": "Coffeincode\\ContaoDummyBundle\\ContaoManager\\Plugin"
+    "contao-manager-plugin": "Coffeincode\\ContaoDownloadarchiveBundle\\ContaoManager\\Plugin"
   }
 }

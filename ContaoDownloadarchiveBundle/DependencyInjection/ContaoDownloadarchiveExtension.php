@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Coffeincode\ContaoDummyBundle\DependencyInjection;
+namespace Coffeincode\ContaoDownloadarchiveBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
-class ContaoDummyExtension extends Extension
+class ContaoDownloadarchiveExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container): void
     {

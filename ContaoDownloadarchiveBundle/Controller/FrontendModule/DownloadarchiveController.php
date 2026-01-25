@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Coffeincode\ContaoDummyBundle\Controller\FrontendModule;
+namespace Coffeincode\ContaoDownloadarchiveBundle\Controller\FrontendModule;
 
-use Coffeincode\ContaoDummyBundle\Model\DummyArchiveModel;
-use Coffeincode\ContaoDummyBundle\Model\DummyItemModel;
+use Coffeincode\ContaoDownloadarchiveBundle\Model\DummyArchiveModel;
+use Coffeincode\ContaoDownloadarchiveBundle\Model\DownloadarchiveitemModel;
 use Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\Twig\FragmentTemplate;
@@ -14,8 +14,8 @@ use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsFrontendModule(type: 'dummy_list', category: 'dummy', template: 'frontend_module/dummy_list')]
-class DummyListController extends AbstractFrontendModuleController
+#[AsFrontendModule(type: 'downloadarchive_list', category: 'downloadarchive', template: 'frontend_module/downloadarchive_list')]
+class DownloadarchiveController extends AbstractFrontendModuleController
 {
     protected function getResponse(FragmentTemplate $template, ModuleModel $model, Request $request): Response
     {
@@ -27,7 +27,7 @@ class DummyListController extends AbstractFrontendModuleController
         }
 
         if ($archive !== null) {
-            $collection = DummyItemModel::findBy('pid', $archive->id, ['order' => 'dummy_item_name']);
+            $collection = DownloadarchiveitemModel::findBy('pid', $archive->id, ['order' => 'dummy_item_name']);
 
             if ($collection !== null) {
                 foreach ($collection as $item) {
@@ -36,8 +36,8 @@ class DummyListController extends AbstractFrontendModuleController
 
                     $items[] = [
                         'id' => $item->id,
-                        'name' => $item->dummy_item_name,
-                        'headline' => $headline !== '' ? $headline : $item->dummy_item_name,
+                        'name' => $item->title,
+                        'headline' => $headline !== '' ? $headline : $item->description,
                     ];
                 }
             }

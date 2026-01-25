@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Coffeincode\ContaoDummyBundle\EventListener\DataContainer;
+namespace Coffeincode\ContaoDownloadarchiveBundle\EventListener\DataContainer;
 
 use Contao\DataContainer;
 use Contao\StringUtil;
 
-class DummyItemLabelCallback
+class DownloaditemLabelCallback
 {
     public function __invoke(array $row, string $label, DataContainer $dc, array $args = []): string
     {  

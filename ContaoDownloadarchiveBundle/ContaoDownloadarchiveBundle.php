@@ -1,12 +1,12 @@
 <?php
 
-namespace Coffeincode\ContaoDummyBundle;
+namespace Coffeincode\ContaoDownloadarchiveBundle;
 
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class ContaoDummyBundle extends AbstractBundle {
+class ContaoDownloadarchiveBundle extends AbstractBundle {
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         
