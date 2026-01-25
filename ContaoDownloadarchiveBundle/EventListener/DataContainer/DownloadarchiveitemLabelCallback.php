@@ -7,7 +7,7 @@ namespace Coffeincode\ContaoDownloadarchiveBundle\EventListener\DataContainer;
 use Contao\DataContainer;
 use Contao\StringUtil;
 
-class DownloaditemLabelCallback
+class DownloadarchiveitemLabelCallback
 {
     public function __invoke(array $row, string $label, DataContainer $dc, array $args = []): string
     {  
