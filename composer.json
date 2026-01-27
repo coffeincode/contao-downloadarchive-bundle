@@ -20,5 +20,5 @@
   },
   "extra": {
     "contao-manager-plugin": "Coffeincode\\ContaoDownloadarchiveBundle\\ContaoManager\\Plugin"
-  },
+  }
 }
