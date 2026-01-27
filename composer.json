@@ -15,10 +15,10 @@
   },
   "autoload": {
     "psr-4": {
-      "Coffeincode\\ContaoDownloadarchiveBundle\\": "ContaoDownloadarchiveBundle/"
+      "Coffeincode\\ContaoDownloadarchiveBundle\\": "src/"
     }
   },
   "extra": {
     "contao-manager-plugin": "Coffeincode\\ContaoDownloadarchiveBundle\\ContaoManager\\Plugin"
-  }
+  },
 }

@@ -7,6 +7,7 @@ use Contao\Config;
 use Contao\System;
 use Contao\DataContainer;
 use Contao\DC_Table;
+use Contao\BackendUser;
 
 System::loadLanguageFile('tl_content');
 
@@ -35,7 +36,7 @@ $GLOBALS['TL_DCA'][$strtable] = [
             'defaultSearchField' => 'title',
             'disableGrouping' => true,
             'headerFields' => ['title'],
-            //todo:
+            //todo: ?
             //'child_record_callback'   => array('tl_downloadarchiveitems', 'listFiles'),
             'renderAsGrid' => true,
             'limitHeight' => 160,
@@ -50,14 +51,14 @@ $GLOBALS['TL_DCA'][$strtable] = [
     'palettes' => [
 
         '__selector__'                => ['protected','addImage'],
-        'default'                     => '{title_legend},title,description;{file_legend:hide},singleSRC,createImage;'
+        'default'                     => '{title_legend},title,description;{file_legend:hide},singleSRC;'
             .'{image_legend:hide},addImage;'
             .'{protection_legend:hide},guests,protected;'
             .'{publish_legend},published,start,stop'
     ],
     'subpalettes' => [
         'protected'                   => 'groups',
-        'addImage'                    => 'imgSRC,alt,size'
+        'addImage'                    => 'imgSRC, useImage,alt,caption, size, floating'
     ],
     'fields' => [
 
@@ -83,12 +84,12 @@ $GLOBALS['TL_DCA'][$strtable] = [
         'description' => [
             'label'                   => &$GLOBALS['TL_LANG']['tl_downloadarchiveitems']['description'],
             'exclude'                 => true,
-            'inputType'               => 'text',
-            'eval'                    => ['mandatory'=> true, 'basicEntities' => true, 'maxlength' => 255],
+            'inputType'               => 'textarea',
+            'eval'                    => ['rte'=>'tinyMCE','mandatory'=> true, 'basicEntities' => true, 'maxlength' => 255],
             'sql'                     => "varchar(255) NOT NULL default ''"
         ],
         'singleSRC' => [
-            'label'                   => &$GLOBALS['TL_LANG']['tl_downloadarchiveitems']['singleSRC'],
+            'label'                   => &$GLOBALS['TL_LANG']['tl_content']['singleSRC'],
             'exclude'                 => true,
             'inputType'               => 'fileTree',
             'eval'                    => ['mandatory'=>true,'files'=>true,'fieldType'=>'radio'],
@@ -131,30 +132,30 @@ $GLOBALS['TL_DCA'][$strtable] = [
             'label'                   => &$GLOBALS['TL_LANG']['tl_content']['singleSRC'],
             'exclude'                 => true,
             'inputType'               => 'fileTree',
-            'eval'                    => array('mandatory'=>true,'files'=>true,'fieldType'=>'radio'),
+            'eval'                    => array('mandatory'=>true,'files'=>true,'fieldType'=>'radio', 'tl_class'=>'w50'),
             'sql'                     => "binary(16) NULL"
-        ),
-        'createImage' => array
-        (
-            'label'                   => &$GLOBALS['TL_LANG']['tl_downloadarchiveitems']['createImage'],
-            'exclude'                 => true,
-            'inputType'               => 'checkbox',
-            'eval'                    => array(),
-            'sql'                     => "char(1) NOT NULL default ''"
         ),
 
         'size'=> [
-            'inputType' => 'standardField',
+            'label'                   => &$GLOBALS['TL_LANG']['MSC']['imgSize'],
+			'inputType'               => 'imageSize',
+			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
+			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50 clr'),
+			//todo: transform into eventlistener?
+            'options_callback' => static function () {
+                                return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
+                    },
+			'sql'                     => "varchar(64) NOT NULL default ''"
         ],
         'alt'=> [
             'label' => &$GLOBALS['TL_LANG']['tl_content']['alt'],
             'inputType' => 'text',
             'exclude' => true,
-            'eval' => ['mandatory'=>false, 'rgxp'=>'extnd', 'maxlength'=>255, 'tl_class'=>'long'],
+            'eval' => ['mandatory'=>false, 'rgxp'=>'extnd', 'maxlength'=>255, 'tl_class'=>'long clr'],
             'sql' => "varchar(255) NOT NULL default ''"
         ],
         'caption'=> [
-            'label'                   => &$GLOBALS['TL_LANG']['tl_content']['caption'],
+            'label'                   => &$GLOBALS['TL_LANG']['tl_downloadarchiveitems']['caption'],
             'exclude'                 => true,
             'search'                  => true,
             'inputType'               => 'text',
@@ -193,12 +194,14 @@ $GLOBALS['TL_DCA'][$strtable] = [
 
 
         'start' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_content']['start'],
             'inputType' => 'text',
             'eval' => ['rgxp' => 'datim', 'datepicker' => true, 'tl_class' => 'w50 wizard'],
             'sql' => "varchar(10) NOT NULL default ''"
         ],
 
         'stop' => [
+            'label' => &$GLOBALS['TL_LANG']['tl_content']['stop'],
             'inputType' => 'text',
             'eval' => ['rgxp' => 'datim', 'datepicker' => true, 'tl_class' => 'w50 wizard'],
             'sql' => "varchar(10) NOT NULL default ''"
