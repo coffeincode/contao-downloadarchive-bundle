@@ -4,8 +4,8 @@ services:
         autoconfigure: true
 
     Coffeincode\ContaoDownloadarchiveBundle\:
-        resource: '../ContaoDownloadarchiveBundle/*'
-        exclude: '../ContaoDownloadarchiveBundle/{ContaoManager,DependencyInjection,ContaoDownloadarchiveBundle.php}'
+        resource: '../src/*'
+        exclude: '../src/{ContaoManager,DependencyInjection,ContaoDownloadarchiveBundle.php}'
 
     Coffeincode\ContaoDownloadarchiveBundle\EventListener\DataContainer\DownloadarchiveitemLabelCallback:
         tags:
