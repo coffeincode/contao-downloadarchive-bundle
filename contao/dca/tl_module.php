@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 use Coffeincode\ContaoDownloadarchiveBundle\Model\DownloadarchiveModel;
 
-$GLOBALS['TL_DCA']['tl_module']['palettes']['downloadarchive'] = '{title_legend},name,headline,type;{config_legend},dummy_archive;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['downloadarchive'] = '{title_legend},name,headline,type;{config_legend},downloadarchive;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID';
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['downloadarchive'] = [
     'inputType' => 'select',
     'options_callback' => static function (): array {
         $options = [];
-        $archives = DownloadarchiveModel::findAll(['order' => 'tittle']);
+        $archives = DownloadarchiveModel::findAll(['order' => 'title']);
 
         if ($archives === null) {
             return $options;

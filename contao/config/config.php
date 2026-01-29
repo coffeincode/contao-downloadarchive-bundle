@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 use Contao\ArrayUtil;
-use Coffeincode\ContaoDownloadarchiveBundle\Model\DummyArchiveModel;
+use Coffeincode\ContaoDownloadarchiveBundle\Model\DownloadarchiveModel;
 use Coffeincode\ContaoDownloadarchiveBundle\Model\DownloadarchiveitemModel;
 
 

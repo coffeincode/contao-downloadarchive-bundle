@@ -8,15 +8,25 @@
 {% endif %}
 <h1>ich bin der fallback!</h1>
 {% if archive %}
-  <h3>{{ archive.dummy_archive_name }}</h3>
+  <h3>{{ archive.title }}</h3>
 {% endif %}
 
 {% if items is not empty %}
+  hallo welt
   <ul class="dummy-items">
     {% for item in items %}
       <li>
         <span class="dummy-item-id">#{{ item.id }}</span>
-        <span class="dummy-item-headline">{{ item.headline }}</span>
+        <span class="dummy-item-headline">{{ item.title }}</span>
+        <span class="dummy-item-headline">{{ item.description }}</span><br><p>
+        <span class="dummy-item-headline">{{ item.singleSRC }}</span></p>
+        <p><span class="dummy-item-headline">{{ item.filePath }}</span></p>
+        <p><a href="{{ item.href }}" download="{{ item.filePath }}">hier</a></span></p>
+        {% if item.figure %}
+          <div class="image_container{{ item.floatClass }}">
+            {% include '@ContaoCore/Image/Studio/figure.html.twig' with {figure: item.figure} %}
+          </div>
+        {% endif %}
       </li>
     {% endfor %}
   </ul>
