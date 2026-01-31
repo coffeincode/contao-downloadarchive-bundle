@@ -31,7 +31,7 @@ class DownloadarchiveController extends AbstractFrontendModuleController
 
         if ($model->downloadarchive) {
             $archive = DownloadarchiveModel::findPublishedById($model->downloadarchive);
-            //$archive = DownloadarchiveModel::find
+
         }
 
         if ($archive !== null) {

@@ -69,14 +69,14 @@ $GLOBALS['TL_DCA'][$strtable] = [
             'label' => &$GLOBALS['TL_LANG']['tl_downloadarchive']['loadDirectory'],
             'exclude' => true,
             'inputType' => 'checkbox',
-            'eval' => ['submitOnChange' => true],
+            'eval'      => ['submitOnChange' => true],
             'sql' => "char(1) NOT NULL default ''",
         ],
         'loadSubdir' => [
             'label' => &$GLOBALS['TL_LANG']['tl_downloadarchive']['loadSubdir'],
             'exclude' => true,
             'inputType' => 'checkbox',
-            'eval' => ['submitOnChange' => true],
+            'eval'      => ['submitOnChange' => true],
             'sql' => "char(1) NOT NULL default ''"
         ],
         'dirSRC' => [
@@ -105,6 +105,7 @@ $GLOBALS['TL_DCA'][$strtable] = [
             'exclude'                 => true,
             'inputType'               => 'checkbox',
             'eval' => ['tl_class' => 'clr m12'],
+            'sql'                     => "char(1) NOT NULL default ''"
         ],
         'class' => [
             'label'                   => &$GLOBALS['TL_LANG']['tl_downloadarchive']['class'],

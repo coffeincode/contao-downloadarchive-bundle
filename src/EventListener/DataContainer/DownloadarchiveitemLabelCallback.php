@@ -5,30 +5,15 @@ declare(strict_types=1);
 namespace Coffeincode\ContaoDownloadarchiveBundle\EventListener\DataContainer;
 
 use Contao\DataContainer;
+use Contao\FilesModel;
 use Contao\StringUtil;
 
 class DownloadarchiveitemLabelCallback
 {
     public function __invoke(array $row, string $label, DataContainer $dc, array $args = []): string
     {  
-        $headline = '';
-   
-        if (isset($row['headline'])) {
-            $headlineData = StringUtil::deserialize($row['headline'], true);
 
-            if (is_array($headlineData)) {
-                $headline = (string) ($headlineData['value'] ?? $headlineData[0] ?? '');
-            } elseif (null !== $headlineData) {
-                $headline = (string) $headlineData;
-            }
-        }
 
-        $headline = trim($headline);
-
-        if ($headline === '') {
-            $headline = '-';
-        }
-
-        return sprintf('id %s - headline  %s', $row['id'] ?? '', $headline);
+        return sprintf('id %s -  %s <br><p> %s </p>', $row['id'] ?? '', $row['title'], FilesModel::findByUuid($row['singleSRC'])->path);
     }
 }

@@ -85,7 +85,7 @@ $GLOBALS['TL_DCA'][$strtable] = [
             'label'                   => &$GLOBALS['TL_LANG']['tl_downloadarchiveitems']['description'],
             'exclude'                 => true,
             'inputType'               => 'textarea',
-            'eval'                    => ['rte'=>'tinyMCE','mandatory'=> true, 'basicEntities' => true, 'maxlength' => 255],
+            'eval'                    => ['rte'=>'tinyMCE','mandatory'=> false, 'basicEntities' => true, 'maxlength' => 255],
             'sql'                     => "varchar(255) NOT NULL default ''"
         ],
         'singleSRC' => [

@@ -2,6 +2,8 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+        bind:
+            Psr\Log\LoggerInterface: '@monolog.logger.contao'
 
     Coffeincode\ContaoDownloadarchiveBundle\:
         resource: '../src/*'
@@ -10,3 +12,7 @@ services:
     Coffeincode\ContaoDownloadarchiveBundle\EventListener\DataContainer\DownloadarchiveitemLabelCallback:
         tags:
             - { name: contao.callback, table: tl_downloadarchiveitems, target: list.label.label_callback, method: __invoke }
+
+    Coffeincode\ContaoDownloadarchiveBundle\EventListener\DataContainer\DownloadarchiveSaveCallback:
+        tags:
+            - { name: contao.callback, table: tl_downloadarchive, target: config.onsubmit_callback, method: __invoke }
