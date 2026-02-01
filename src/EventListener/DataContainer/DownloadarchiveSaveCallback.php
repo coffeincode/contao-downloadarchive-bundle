@@ -52,20 +52,6 @@ class DownloadarchiveSaveCallback {
             //$this->logger->info('DownloadarchiveSaveCallback, nix zu ttun', ['contao' => new ContaoContext(__METHOD__, ContaoContext::GENERAL)]);
             return;
         }
-        /*steps to read the directory:
-         * 1. check if folder exists -> if not, return
-         * 2. check if archive is empty -> if not, return
-         * 3. check for filetypes allowed
-         * 4. check if subfolders should  be read too
-         * 5. check if a  prefix is set
-         *
-         * 6. collect files
-         * 7. for each file:
-         *      create a database-entry in tl_dlarchiveitems
-         *
-         *
-
-        */
 
         //this delivers a set of filenames within the folder saved in dirSRC. Be careful, it also delivers foldernames witthin
         // $arrFiles = Folder::scan(FilesModel::findByUuid($dc->activeRecord->dirSRC)->path );
@@ -89,32 +75,29 @@ class DownloadarchiveSaveCallback {
 
         //var_dump($arrFiles) ;
         //die();
-        $this->logger->info('DownloadarchiveSaveCallback wurde aufgerufen', ['contao' => new ContaoContext(__METHOD__, ContaoContext::GENERAL)]);
-        $this->logger->info('Downloadarchive id: '.$dc->id, ['contao' => new ContaoContext(__METHOD__, ContaoContext::GENERAL)]);
-        //$this->logger->info('Downloadarchive Verzeichnis laden: '.$arrFiles[0], ['contao' => new ContaoContext(__METHOD__, ContaoContext::GENERAL)]);
+        //$this->logger->info('DownloadarchiveSaveCallback wurde aufgerufen', ['contao' => new ContaoContext(__METHOD__, ContaoContext::GENERAL)]);
+
 
     }
 
     private function createEntries(string $id, Collection $arrObjFiles, array $arrAllowedExtensions, bool $loadSubdirectories, string $prefix, bool $publishAll, string $class): void{
 
-        $this->logger->info('DownloadarchiveSaveCallback : in arrObjFiles sind '.count($arrObjFiles)." Einträge.", ['contao' => new ContaoContext(__METHOD__, ContaoContext::GENERAL)]);
+        //$this->logger->info('DownloadarchiveSaveCallback : in arrObjFiles sind '.count($arrObjFiles)." Einträge.", ['contao' => new ContaoContext(__METHOD__, ContaoContext::GENERAL)]);
         for ($i=0; $i < count($arrObjFiles); $i++) {
-            $this->logger->info('Schleifendurchgang: '.$i, ['contao' => new ContaoContext(__METHOD__, ContaoContext::GENERAL)]);
+            //$this->logger->info('Schleifendurchgang: '.$i, ['contao' => new ContaoContext(__METHOD__, ContaoContext::GENERAL)]);
             $objFile = $arrObjFiles[$i];
             //var_dump($objFile);
             if ($objFile->type === 'folder') {
-                //todo! call recursive function here!
-                $this->logger->info('DownloadarchiveSaveCallback hat Folder gefunden, ggf Rekursion nötig: '.$objFile->path.$objFile->name, ['contao' => new ContaoContext(__METHOD__, ContaoContext::GENERAL)]);
+                //call recursive function here!
+                //$this->logger->info('DownloadarchiveSaveCallback hat Folder gefunden, ggf Rekursion nötig: '.$objFile->path.$objFile->name, ['contao' => new ContaoContext(__METHOD__, ContaoContext::GENERAL)]);
                 if ($loadSubdirectories) {
                     $newArrObjFiles = FilesModel::findByPid($objFile->uuid);
                     if ($newArrObjFiles)    {
-
                         $this->createEntries($id, $newArrObjFiles, $arrAllowedExtensions, $loadSubdirectories, $prefix, $publishAll, $class);}
                 }
             }
             else if(count($arrAllowedExtensions)===0 || in_array($objFile->extension, $arrAllowedExtensions)){
                 //insert as downloadarchiveitem
-                $this->logger->info('DownloadarchiveSaveCallback hat Datei gefunden, einfügen: '.$objFile->name.'UUID: '.$objFile->uuid, ['contao' => new ContaoContext(__METHOD__, ContaoContext::GENERAL)]);
                 $this->filecounter++;
                 if($prefix!=''){
                     $tmpName = $prefix.$this->filecounter;
@@ -122,7 +105,7 @@ class DownloadarchiveSaveCallback {
                 else{
                     $tmpName = $objFile->name;
                 }
-                $this->db->insert('tl_downloadarchiveitems', ['pid'=>$id,'sorting'=>$this->filecounter*32, 'title'=>$tmpName, 'singleSRC'=>$objFile->uuid, 'published'=>$publishAll]);
+                $this->db->insert('tl_downloadarchiveitems', ['pid'=>$id,'sorting'=>$this->filecounter*32, 'title'=>$tmpName, 'description'=>'','singleSRC'=>$objFile->uuid, 'published'=>$publishAll]);
             }
         }
     }
