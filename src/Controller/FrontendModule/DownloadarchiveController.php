@@ -30,73 +30,80 @@ class DownloadarchiveController extends AbstractFrontendModuleController
         $filePath = null;
 
         if ($model->downloadarchive) {
-            $archive = DownloadarchiveModel::findPublishedById($model->downloadarchive);
+            $archiveIds= StringUtil::deserialize($model->downloadarchive);
+
+            $archives = [];
+            foreach ($archiveIds as $archiveId) {
+                $archives[] = DownloadarchiveModel::findPublishedById($archiveId);
+            }
+
 
         }
 
-        if ($archive !== null) {
+        if ($archives !== null) {
+            foreach ($archives as $archive) {
+                $collection = DownloadarchiveitemModel::findBy('pid', $archive->id, ['order' => 'title']);
 
-            $collection = DownloadarchiveitemModel::findBy('pid', $archive->id, ['order' => 'title']);
-
-            if ($collection !== null) {
+                if ($collection !== null) {
 
 
+                    //todo: change to dependency injection
+                    /** @var Studio $studio */
+                    $studio = System::getContainer()->get('contao.image.studio');
 
-                //todo: change to dependency injection
-                /** @var Studio $studio */
-                $studio = System::getContainer()->get('contao.image.studio');
+                    foreach ($collection as $item) {
+                        $figure = null;
 
-                foreach ($collection as $item) {
-                    $figure = null;
+                        if ($item->addImage) {
+                            $figure = $studio
+                                ->createFigureBuilder()
+                                ->from($item->imgSRC)
+                                ->setSize($item->size)
+                                ->setMetadata(new Metadata([
+                                    Metadata::VALUE_ALT => $item->alt,
+                                    Metadata::VALUE_CAPTION => $item->caption,
+                                ]))
+                                ->buildIfResourceExists();
+                        }
 
-                    if ($item->addImage) {
-                        $figure = $studio
-                            ->createFigureBuilder()
-                            ->from($item->imgSRC)
-                            ->setSize($item->size)
-                            ->setMetadata(new Metadata([
-                                Metadata::VALUE_ALT => $item->alt,
-                                Metadata::VALUE_CAPTION => $item->caption,
-                            ]))
-                            ->buildIfResourceExists();
+                        $fileModel= FilesModel::findByUuid($item->singleSRC);
+                        $filePath = $fileModel?->path;
+                        $downloadHref = null;
+                        if ($filePath){
+                            $href = Environment::get('base').'/'.$filePath;
+                        }
+                        $fileModel= FilesModel::findByUuid($item->singleSRC);
+                        $filePath = $fileModel?->path;
+                        $downloadHref = null;
+                        if ($filePath){
+                            //$href = Environment::get('base').'/'.$filePath;
+                        }
+
+                        $items[] = [
+                            'id' => $item->id,
+                            'title' => $item->title,
+                            'description' => $item->description,
+                            'singleSRC' => $item->singleSRC,
+                            'filePath' => $filePath,
+                            'downloadHref' => $downloadHref,
+                            'href' => $href,
+                            'addImage' => (bool) $item->addImage,
+                            'imgSRC' => $item->imgSRC,
+                            'useImage' => $item->useImage,
+                            'alt' => $item->alt,
+                            'caption' => $item->caption,
+                            'size' => $item->size,
+                            'floating' => $item->floating,
+                            'figure' => $figure,
+                            'floatClass' => ($item->floating === 'left' ? ' float_left' : ($item->floating === 'right' ? ' float_right' : '')),
+                        ];
                     }
-
-                    $fileModel= FilesModel::findByUuid($item->singleSRC);
-                    $filePath = $fileModel?->path;
-                    $downloadHref = null;
-                    if ($filePath){
-                        $href = Environment::get('base').'/'.$filePath;
-                    }
-                    $fileModel= FilesModel::findByUuid($item->singleSRC);
-                    $filePath = $fileModel?->path;
-                    $downloadHref = null;
-                    if ($filePath){
-                        //$href = Environment::get('base').'/'.$filePath;
-                    }
-
-                    $items[] = [
-                        'id' => $item->id,
-                        'title' => $item->title,
-                        'description' => $item->description,
-                        'singleSRC' => $item->singleSRC,
-                        'filePath' => $filePath,
-                        'downloadHref' => $downloadHref,
-                        'href' => $href,
-                        'addImage' => (bool) $item->addImage,
-                        'imgSRC' => $item->imgSRC,
-                        'useImage' => $item->useImage,
-                        'alt' => $item->alt,
-                        'caption' => $item->caption,
-                        'size' => $item->size,
-                        'floating' => $item->floating,
-                        'figure' => $figure,
-                        'floatClass' => ($item->floating === 'left' ? ' float_left' : ($item->floating === 'right' ? ' float_right' : '')),
-                    ];
                 }
             }
+
         }
 
-        $template->set('archive', $archive);
+        //$template->set('archive', $archive);
         $template->set('items', $items);
 
         return $template->getResponse();
