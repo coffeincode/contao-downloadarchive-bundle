@@ -18,3 +18,6 @@ ArrayUtil::arrayInsert($GLOBALS['BE_MOD'], 1, [
 
 $GLOBALS['TL_MODELS']['tl_downloadarchive'] = DownloadarchiveModel::class;
 $GLOBALS['TL_MODELS']['tl_downloadarchiveitems'] = DownloadarchiveitemModel::class;
+
+$GLOBALS['TL_PERMISSIONS'][] = 'downloadarchivep';
+$GLOBALS['TL_PERMISSIONS'][] = 'downloadarchives';
