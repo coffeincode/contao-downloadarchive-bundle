@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Coffeincode\ContaoDownloadarchiveBundle\EventListener\DataContainer;
 
 use Coffeincode\ContaoDownloadarchiveBundle\Model\DownloadarchiveitemModel;
+use Coffeincode\ContaoDownloadarchiveBundle\Model\DownloadarchiveModel;
+use Contao\BackendUser;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\DataContainer;
 use Contao\FilesModel;
@@ -32,6 +34,7 @@ class DownloadarchiveSaveCallback {
 
     public function __invoke(DataContainer $dc): void{
 
+
         if (Input::post('FORM_SUBMIT') !== 'tl_downloadarchive') {
             return;
         }
@@ -44,6 +47,7 @@ class DownloadarchiveSaveCallback {
             Input::post('saveNcreate') === null &&
             Input::post('saveNduplicate') === null
         ) {
+
             // submitOnChange (palette reload) – skip
             return;
         }
@@ -52,6 +56,8 @@ class DownloadarchiveSaveCallback {
             //$this->logger->info('DownloadarchiveSaveCallback, nix zu ttun', ['contao' => new ContaoContext(__METHOD__, ContaoContext::GENERAL)]);
             return;
         }
+
+
 
         //this delivers a set of filenames within the folder saved in dirSRC. Be careful, it also delivers foldernames witthin
         // $arrFiles = Folder::scan(FilesModel::findByUuid($dc->activeRecord->dirSRC)->path );

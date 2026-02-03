@@ -18,5 +18,10 @@ services:
         tags:
             - { name: contao.callback, table: tl_downloadarchive, target: config.onsubmit_callback, method: __invoke }
 
+
+    Coffeincode\ContaoDownloadarchiveBundle\EventListener\DataContainer\DownloadarchiveCreateCallback:
+        tags:
+            - { name: contao.callback, table: tl_downloadarchive, target: config.oncreate_callback, method: __invoke }
+
     Coffeincode\ContaoDownloadarchiveBundle\Security\Voter\DataContainer\DownloadarchiveAccessVoter:
         tags: ['security.voter']
