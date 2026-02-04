@@ -22,6 +22,7 @@ services:
     Coffeincode\ContaoDownloadarchiveBundle\EventListener\DataContainer\DownloadarchiveCreateCallback:
         tags:
             - { name: contao.callback, table: tl_downloadarchive, target: config.oncreate_callback, method: __invoke }
+            - { name: contao.callback, table: tl_downloadarchive, target: config.oncopy_callback, method: copy }
 
     Coffeincode\ContaoDownloadarchiveBundle\Security\Voter\DataContainer\DownloadarchiveAccessVoter:
         tags: ['security.voter']

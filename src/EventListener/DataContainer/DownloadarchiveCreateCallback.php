@@ -33,15 +33,18 @@ class DownloadarchiveCreateCallback
 
     public function __invoke(string $table, int $id, array $row, DataContainer $dc): void
     {
-        if (Input::get('act') !== 'create') {
+        if (! (Input::get('act') == 'create' || Input::get('act') == 'copy' )) {
             return;
         }
 
 
         $user = BackendUser::getInstance();
-        //var_dump($user);
-        //die();
+        //no checks for admins
         if ($user->isAdmin) {
+            return;
+        }
+        //make sure the user has permission to create archives
+        if (!in_array('create', StringUtil::deserialize($user->downloadarchivep, true))){
             return;
         }
 
@@ -55,4 +58,9 @@ class DownloadarchiveCreateCallback
         // keep session in sync
         $user->downloadarchives = $ids;
     }
+    public function copy(int $id, DataContainer $dc): void {
+
+        $this->__invoke('tl_downloadarchive', $id, [], $dc);
+    }
 }
+
