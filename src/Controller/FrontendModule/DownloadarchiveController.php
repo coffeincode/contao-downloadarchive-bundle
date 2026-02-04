@@ -70,8 +70,7 @@ class DownloadarchiveController extends AbstractFrontendModuleController
                 else $arrOptions['limit'] = $perPage;
 
                 $offset = ($page - 1) * $perPage;
-                //todo: here's a bug for the last page to fix - the limit must be corrected on the last page if there are fewer elements allowed by limit than are avvailable
-                //$arrOptions['limit'] = $perPage;
+
                 $arrOptions['offset'] = $offset;
 
 
@@ -109,17 +108,11 @@ class DownloadarchiveController extends AbstractFrontendModuleController
                     if ($filePath) {
                         $href = Environment::get('base') . '/' . $filePath;
                     }
-                   /* $fileModel = FilesModel::findByUuid($item->singleSRC);
-                    $filePath = $fileModel?->path;
-                    $downloadHref = null;
-                    if ($filePath) {
-                        //$href = Environment::get('base').'/'.$filePath;
-                    }
-                    */
 
-                    // todo: get metadata from file
+
+                    //  get metadata from file
                     $filesize = $this->human_filesize(strval(filesize($filePath)), 2);
-                    // todo: add date of download
+
 
 
                     $items[] = [

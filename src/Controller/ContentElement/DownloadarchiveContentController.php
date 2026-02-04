@@ -7,6 +7,7 @@ namespace Coffeincode\ContaoDownloadarchiveBundle\Controller\ContentElement;
 
 use Coffeincode\ContaoDownloadarchiveBundle\Model\DownloadarchiveModel;
 use Coffeincode\ContaoDownloadarchiveBundle\Model\DownloadarchiveitemModel;
+use Contao\ContentModel;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\File\Metadata;
@@ -29,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsContentElement(type: 'downloadarchive', category: 'downloadarchive', template: 'content_element/content_downloadarchive')]
 class DownloadarchiveContentController extends AbstractContentElementController
 {
-    protected function getResponse(FragmentTemplate $template, ModuleModel $model, Request $request): Response
+    protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         $archive = null;
         $items = [];
@@ -37,7 +38,7 @@ class DownloadarchiveContentController extends AbstractContentElementController
         $filePath = null;
         $archiveIds = null;
 
-        
+
         if ($model->downloadarchive) {
             $archiveIds = StringUtil::deserialize($model->downloadarchive);
 
@@ -60,9 +61,37 @@ class DownloadarchiveContentController extends AbstractContentElementController
             } else {
                 $arrOptions = ['order' => $model->downloadSorting];
             }
+
+            $perPage = (int) $model->perPage;
+            if ($perPage > 0) {
+                $total = $model->downloadNumberOfItems!=0 ? $model->downloadNumberOfItems : DownloadarchiveitemModel::countByPids($archiveIds);
+                $param = 'page_n'.$model->id;
+                $page = (int) (Input::get($param) ?? 1);
+
+                if ($page < 1 || $page > max(ceil($total / $perPage), 1)) {
+                    throw new PageNotFoundException('Page not found: '.Environment::get('uri'));
+                }else if ($page == intval(ceil($total / $perPage)) ){
+                    //in this case only total  % perpage is left to display as we are on the last page
+                    $arrOptions['limit'] = $total%$perPage;
+                }
+                else $arrOptions['limit'] = $perPage;
+
+                $offset = ($page - 1) * $perPage;
+
+                $arrOptions['offset'] = $offset;
+
+
+                $pagination = new Pagination($total, $perPage, Config::get('maxPaginationLinks'), $param);
+                $template->set('pagination', $pagination->generate("\n  "));
+            }
+            else  $template->set('pagination', "");
+
+
+
             $collection = DownloadarchiveitemModel::findByPids($archiveIds, $arrOptions);
 
             if ($collection !== null) {
+
 
                 //todo: change to dependency injection
                 /** @var Studio $studio */
@@ -127,6 +156,7 @@ class DownloadarchiveContentController extends AbstractContentElementController
         $template->set('items', $items);
 
         return $template->getResponse();
+
     }
 
     private function human_filesize(string $bytes, $decimals = 2)
@@ -135,4 +165,5 @@ class DownloadarchiveContentController extends AbstractContentElementController
         if ($factor > 0) $sz = 'KMGT';
         return str_replace(".", ",", sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor - 1] . 'B');
     }
+
 }
