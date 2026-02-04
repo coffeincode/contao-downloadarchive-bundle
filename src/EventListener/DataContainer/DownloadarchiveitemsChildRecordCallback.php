@@ -8,7 +8,8 @@ use Contao\DataContainer;
 use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\Image;
-use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;use function Symfony\Component\String\u;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
+use function Symfony\Component\String\u;
 
 #[AsCallback(table: 'tl_downloadarchiveitems', target: 'list.sorting.child_record')]
 class DownloadarchiveitemsChildRecordCallback

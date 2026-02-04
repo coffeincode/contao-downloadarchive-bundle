@@ -79,9 +79,7 @@ class DownloadarchiveSaveCallback {
         $this->createEntries($dc->id, $arrObjFiles, $arrAllowedExtensions, $dc->activeRecord->loadSubdir===''?false:true, $prefix,$publishAll ,$classes);
 
 
-        //var_dump($arrFiles) ;
-        //die();
-        //$this->logger->info('DownloadarchiveSaveCallback wurde aufgerufen', ['contao' => new ContaoContext(__METHOD__, ContaoContext::GENERAL)]);
+
 
 
     }
