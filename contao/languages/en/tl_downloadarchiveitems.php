@@ -27,6 +27,5 @@ $GLOBALS['TL_LANG']['tl_downloadarchiveitems']['addImage'] = ['Use an image', 'C
 $GLOBALS['TL_LANG']['tl_downloadarchiveitems']['loadSubdir'] = ['Scan subdirectories', 'Do you want to scan subdirectories?'];
 $GLOBALS['TL_LANG']['tl_downloadarchiveitems']['guests'] = ['Only show to guests', 'Show file only to visitors who are not logged in.'];
 $GLOBALS['TL_LANG']['tl_downloadarchiveitems']['protected'] = ['Protect file', 'Show file to certain member groups only.'];
-//$GLOBALS['TL_LANG']['tl_downloadarchiveitems']['published'] = ['Auto publish all files', 'Automatically publish all files on initial import.'];
 $GLOBALS['TL_LANG']['tl_downloadarchiveitems']['publish_legend'] = 'Publish Download';
 $GLOBALS['TL_LANG']['tl_downloadarchiveitems']['published'] = ['Publish entry', 'Unless you choose this option the entry will not be visible to the visitors of your website.'];

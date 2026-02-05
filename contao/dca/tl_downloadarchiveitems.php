@@ -36,8 +36,6 @@ $GLOBALS['TL_DCA'][$strtable] = [
             'defaultSearchField' => 'title',
             'disableGrouping' => true,
             'headerFields' => ['title'],
-            //todo: ?
-            //'child_record_callback'   => array('tl_downloadarchiveitems', 'listFiles'),
             'renderAsGrid' => true,
             'limitHeight' => 160,
         ],
@@ -83,10 +81,9 @@ $GLOBALS['TL_DCA'][$strtable] = [
         ],
         'description' => [
             'label'                   => &$GLOBALS['TL_LANG']['tl_downloadarchiveitems']['description'],
-            'exclude'                 => true,
             'inputType'               => 'textarea',
             'eval'                    => ['rte'=>'tinyMCE','mandatory'=> false, 'basicEntities' => true, ],
-            'sql'                     => "text NOT NULL default ''"
+            'sql'                     => "text NULL"
         ],
         'singleSRC' => [
             'label'                   => &$GLOBALS['TL_LANG']['tl_content']['singleSRC'],

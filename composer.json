@@ -1,8 +1,8 @@
 {
   "name": "coffeincode/contao-downloadarchive-bundle",
   "type": "contao-bundle",
-  "description": "Downloadarchive for 5.3",
-  "license": "Apache",
+  "description": "Downloadarchive for 5.3 - this extension is a fork/port of laemmi/contao-downloadarchive which ported the original Downloadarchive by felixpfeiffer/contao-downloadarchive. Credit goes to felixpfeiffer, as the concept is not my work  - I only ported it to Contao 5.3 and moved it to using twig and as much symfony as possible.",
+  "license": "LGPL-3.0-or-later",
   "authors": [
     {
       "name": "Marina",

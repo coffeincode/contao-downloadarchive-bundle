@@ -26,17 +26,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['downloadarchive'] = [
     'sql' => "text NULL ",
     'relation' => ['table' => 'tl_downloadarchive', 'type' => 'belongsTo', 'load' => 'lazy'],
 ];
-/*
-$GLOBALS['TL_DCA']['tl_module']['fields']['downloadarchive'] =
-    [
-        'label'                   => &$GLOBALS['TL_LANG']['tl_module']['downloadarchive'],
-        'exclude'                 => true,
-        'inputType'               => 'checkbox',
-        'foreignKey'              => 'tl_downloadarchive.title',
-        'eval'                    => ['multiple' => true, 'mandatory' => true],
-        'sql'                     => "text NULL"
-    ];
-*/
+
 $GLOBALS['TL_DCA']['tl_module']['fields']['downloadShowMeta'] =
     [
         'label'                   => &$GLOBALS['TL_LANG']['tl_module']['downloadShowMeta'],
@@ -63,7 +53,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['downloadSorting'] =
         'default'         => 'sorting ASC',
         'options'                 => ['sorting ASC','sorting DESC','tstamp ASC','tstamp DESC','title ASC','title DESC'],
         'reference'               => &$GLOBALS['TL_LANG']['tl_module']['downloadarchivSortingOptions'],
-        'eval'                    => [],
+        'eval'                    => ['tl_class' => 'w50 '],
         'sql'                     => "varchar(25) NOT NULL default ''"
     ];
 $GLOBALS['TL_DCA']['tl_module']['fields']['downloadNumberOfItems'] =
@@ -72,6 +62,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['downloadNumberOfItems'] =
         'default'                 => 0,
         'exclude'                 => true,
         'inputType'               => 'text',
-        'eval'                    => ['rgxp' => 'digit', 'tl_class' => 'w50'],
+        'eval'                    => ['rgxp' => 'digit', 'tl_class' => 'w50 clear'],
         'sql'                     => "smallint(5) unsigned NOT NULL default '0'"
     ];
+

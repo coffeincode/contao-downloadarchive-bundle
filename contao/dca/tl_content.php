@@ -11,8 +11,9 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['downloadarchive'] =
         'exclude' => true,
         'inputType' => 'checkbox',
         'foreignKey' => 'tl_downloadarchive.title',
-        'eval' => ['multiple' => true, 'mandatory' => true],
-        'sql' => "text NULL"
+        'eval' => ['multiple' => true, 'mandatory' => true, ],
+        'sql' => "text NULL",
+
     ];
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['downloadShowMeta'] =
@@ -54,4 +55,4 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['downloadSorting'] =
         'sql' => "varchar(25) NOT NULL default ''"
     ];
 
-$GLOBALS['TL_DCA']['tl_content']['palettes']['downloadarchive'] = '{type_legend},type,headline;{downloadarchive_legend},downloadarchive,downloadSorting,downloadNumberOfItems,perPage;{downloadmeta_legend:hide},downloadShowMeta,downloadHideDate;{template_legend:hide},customTpl;{protected_legend:hide},protected,guests;{expert_legend:hide},cssID,space';
+$GLOBALS['TL_DCA']['tl_content']['palettes']['downloadarchive'] = '{type_legend},type,headline;{downloadarchive_legend},downloadarchive,downloadSorting,downloadNumberOfItems,perPage;{downloadmeta_legend:hide},downloadShowMeta,downloadHideDate;{template_legend:hide},customTpl;{protected_legend:hide},protected,guests;{expert_legend:hide},cssID;{invisible_legend}, invisible,start,stop;';
