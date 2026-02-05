@@ -44,23 +44,46 @@ class DownloadarchiveCreateCallback
             return;
         }
         //make sure the user has permission to create archives
+
         if (!in_array('create', StringUtil::deserialize($user->downloadarchivep, true))){
+
             return;
         }
 
         $ids = StringUtil::deserialize($user->downloadarchives, true);
-        $ids[] = (int) $id;
+        $ids[] = (string) $id;
         $ids = array_values(array_unique($ids));
 
-        $this->db->update('tl_user', ['downloadarchives'=>serialize($ids)],['id'=>$user->id]);
+        if ($user->inherit === 'group') {
+            foreach ((array) $user->groups as $groupId) {
+                $group = $this->db->fetchAssociative('SELECT downloadarchives, downloadarchivep FROM tl_user_group WHERE id=?', [$groupId]);
 
+                if (!$group) {
+                    continue;
+                }
+
+                $groupPermissions = StringUtil::deserialize($group['downloadarchivep'] ?? null, true);
+                if (!\in_array('create', $groupPermissions, true)) {
+                    continue;
+                }
+
+                $groupIds = StringUtil::deserialize($group['downloadarchives'] ?? null, true);
+                $groupIds[] = (string) $id;
+                $groupIds = array_values(array_unique($groupIds));
+
+                $this->db->update('tl_user_group', ['downloadarchives' => serialize($groupIds)], ['id' => $groupId]);
+            }
+        } else {
+            $this->db->update('tl_user', ['downloadarchives' => serialize($ids)], ['id' => $user->id]);
+        }
 
         // keep session in sync
         $user->downloadarchives = $ids;
+        
+
     }
     public function copy(int $id, DataContainer $dc): void {
 
         $this->__invoke('tl_downloadarchive', $id, [], $dc);
     }
 }
-

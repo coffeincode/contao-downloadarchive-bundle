@@ -10,6 +10,7 @@ use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\AbstractDataContainerVoter;
+use Contao\Input;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
@@ -30,6 +31,20 @@ class DownloadarchiveAccessVoter extends AbstractDataContainerVoter
         //var_dump($this);die();
         if (!$this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'downloadarchive')) {
             return false;
+        }
+
+        if ($action instanceof ReadAction) {
+            $act = Input::get('act');
+            $mode = Input::get('mode');
+            $sourceId = Input::get('id') ?: Input::get('source') ?: Input::get('pid');
+            $isCreatePaste = $act === 'paste' && $mode === 'create';
+
+            if ((\in_array($act, ['create', 'copy', 'copyAll'], true) || $isCreatePaste)
+                && $sourceId !== null
+                && (string) $sourceId === (string) $action->getCurrentId()
+                && $this->accessDecisionManager->decide($token, ['contao_user.downloadarchivep.create'])) {
+                return true;
+            }
         }
 
         return match (true) {
