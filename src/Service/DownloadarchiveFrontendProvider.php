@@ -18,28 +18,30 @@ use Contao\Input;
 use Contao\Pagination;
 use Contao\StringUtil;
 use Contao\System;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class DownloadarchiveFrontendProvider{
-    public function __construct(private readonly HumanReadableFilesizeProvider $humanReadableFilesizeProvider){
+    public function __construct(private readonly HumanReadableFilesizeProvider $humanReadableFilesizeProvider, private readonly Security $security){
 
     }
     public function getItemsForTemplate(int $modelId, array $archiveIds,string $downloadSorting, int $downloadNumberOfItems, int $perPage): array
     {
         if (count($archiveIds)!=0) {
-
-
             $archives = [];
             foreach ($archiveIds as $archiveId) {
-                $archives[] = DownloadarchiveModel::findPublishedById($archiveId);
-            }
 
+                $tmpModel= DownloadarchiveModel::findPublishedById($archiveId);
+                if ($tmpModel !== null) {
+                    $archives[] =$tmpModel->id;
+                }
+
+            }
 
         }
 
 
-        if ($archives !== null) {
-
-
+        if ($archives[0] !== null) {
 
             $arrOptions = [];
 
@@ -51,7 +53,7 @@ class DownloadarchiveFrontendProvider{
 
 
             if ($perPage > 0) {
-                $total = $downloadNumberOfItems!=0 ? $downloadNumberOfItems : DownloadarchiveitemModel::countByPids($archiveIds);
+                $total = $downloadNumberOfItems!=0 ? $downloadNumberOfItems : DownloadarchiveitemModel::countByPids($archives);
                 $param = 'page_n'.$modelId;
                 $page = (int) (Input::get($param) ?? 1);
 
@@ -69,7 +71,7 @@ class DownloadarchiveFrontendProvider{
 
 
                 $pagination = new Pagination($total, $perPage, Config::get('maxPaginationLinks'), $param);
-                /// im Controller belassen! Hier nur erzeugen
+                /// leave the addition to the template in the controller, here only the object is created!
                 /// $template->set('pagination', $pagination->generate("\n  "));
 
             }
@@ -77,7 +79,7 @@ class DownloadarchiveFrontendProvider{
 
 
 
-            $collection = DownloadarchiveitemModel::findByPids($archiveIds, $arrOptions);
+            $collection = DownloadarchiveitemModel::findPublishedByPids($archives, $arrOptions);
 
             if ($collection !== null) {
 
@@ -85,14 +87,36 @@ class DownloadarchiveFrontendProvider{
                 //todo: change to dependency injection
                 /** @var Studio $studio */
                 $studio = System::getContainer()->get('contao.image.studio');
-
+                //$test = "Hallo Welt!";
                 foreach ($collection as $item) {
+
+                    if ($item->protected){
+                        $groups = StringUtil::deserialize($item->groups, true);
+                        if(! $this->security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $groups)){
+
+                            continue;
+                        }
+                    }
+                    if ($item->guests && $this->security->getUser()) {
+                        continue;
+                    }
+
+
                     $figure = null;
+                    $fileModel = FilesModel::findByUuid($item->singleSRC);
+                    $filePath = $fileModel?->path;
+                    $downloadHref = null;
+                    if ($filePath) {
+                        $href = Environment::get('base') . '/' . $filePath;
+                    }
+
                     if ($item->addImage) {
-                        $figure = $studio
-                            ->createFigureBuilder()
+                       //create figure and decide wether to use lightbox or not
+                        $figure=$studio->createFigureBuilder()
                             ->from($item->imgSRC)
                             ->setSize($item->size)
+                            ->enableLightbox($item->useImage==1?true:false)
+                            ->setLinkHref($item->useImage==2?$href:null)
                             ->setMetadata(new Metadata([
                                 Metadata::VALUE_ALT => $item->alt,
                                 Metadata::VALUE_CAPTION => $item->caption,
@@ -100,12 +124,7 @@ class DownloadarchiveFrontendProvider{
                             ->buildIfResourceExists();
                     }
 
-                    $fileModel = FilesModel::findByUuid($item->singleSRC);
-                    $filePath = $fileModel?->path;
-                    $downloadHref = null;
-                    if ($filePath) {
-                        $href = Environment::get('base') . '/' . $filePath;
-                    }
+
 
 
                     // get metadata from file
@@ -133,10 +152,12 @@ class DownloadarchiveFrontendProvider{
                         'floatClass' => ($item->floating === 'left' ? ' float_left' : ($item->floating === 'right' ? ' float_right' : '')),
                     ];
                 }
+
             }
+        }else
+        {
+        return [[], []];
         }
-
-
         return [$items,$pagination];
     }
 }

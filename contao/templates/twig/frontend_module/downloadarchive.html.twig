@@ -1,43 +1,62 @@
 
+{% extends "@Contao/frontend_module/_base.html.twig" %}
 
 
 
 {% block content %}
-{% if headline is defined and headline.text %}
-  <{{ headline.tag_name|default('h2') }}>{{ headline.text }}</{{ headline.tag_name|default('h2') }}>
-{% endif %}
 
-
-    <h2>{{ title }}</h2>
 
 
 {% if items is not empty %}
-  hallo welt
-  <p>Show Meta? {{ showMeta }}</p>
-  <ul class="dummy-items">
-    {% for item in items %}
-      <li>
-        <span class="dummy-item-id">#{{ item.id }}</span>
-        <h3> {{ item.title }}</h3>
-        <span class="dummy-item-headline">{{ item.description }}</span><br><p>
-        <span class="dummy-item-headline">{{ item.singleSRC }}</span></p>
-        <p><span class="dummy-item-headline">{{ item.filePath }}</span></p>
-        <p>Größe: {{ item.filesize }}</span></p>
-        <p>Datum: {{ item.fileDate|date('d.m.Y') }}</span></p>
-        <p><a href="{{ item.href }}" download="{{ item.filePath }}">hier</a></span></p>
-        {% if item.figure %}
-          <div class="image_container{{ item.floatClass }}">
-            {% include '@ContaoCore/Image/Studio/figure.html.twig' with {figure: item.figure} %}
-          </div>
-        {% endif %}
 
-      </li>
+  <div class="downloadarchiveList block">
+
+    {% for item in items %}
+      <div class="downloadarchivItem  block ">
+
+          <h3> {{ item.title }}</h3>
+
+          {% if item.figure %}
+            <div class="image_container{{ item.floatClass }}">
+
+                {% include '@ContaoCore/Image/Studio/figure.html.twig' with {figure: item.figure} %}
+
+            </div>
+
+          {% endif %}
+
+          {% if item.description %}
+            <div class="description">
+              {{ item.description|raw }}
+            </div>
+          {% endif %}
+          {% block meta %}
+            {% if showMeta %}
+              <pre>{{ item.filesize }}</pre>
+            {% endif %}
+          {% endblock %}
+          {% block date %}
+            {%  if not hideDate %}
+              <pre>{{ item.fileDate|date('d.m.Y') }}</pre>
+            {% endif %}
+          {% endblock %}
+
+        {% block download %}
+          <a class="button " href="{{ item.href }}" download="{{ item.filePath }}">Download</a>
+        {% endblock %}
+      </div>
+
+
     {% endfor %}
-  </ul>
-  {% if pagination is not empty %}
-    {{ pagination|raw }}
-  {% endif %}
+  </div>
+  </div>
+  {% block pagination %}
+    {% if pagination is not empty %}
+      {{ pagination|raw }}
+    {% endif %}
+  {%  endblock %}
 {% else %}
-  <p class="dummy-items-empty">No items found.</p>
+  {#  todo: replace with variable/language-setting #}
+  <p class="downloadarchive-empty">Keine Elemente zum Anzeigen. </p>
 {% endif %}
 {% endblock %}

@@ -63,6 +63,7 @@ class DownloadarchiveController extends AbstractFrontendModuleController
         $template->set('showMeta', $model->downloadShowMeta ? true : false);
         $template->set('hideDate', $model->downloadHideDate ? true : false);
         $template->set('items', $items);
+        $template->set('cssId', $model->cssID);
 
 
         return $template->getResponse();

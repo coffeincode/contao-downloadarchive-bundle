@@ -19,7 +19,7 @@ class DownloadarchiveModel extends Model
         return static::findOneBy(['title' => $title]);
     }
     public static function findPublishedById($id, array $options = []){
-        //if (Config::get('showUnpublishedRecords') === true) {
+
         if (static::isPreviewMode($options)) {
             return static::findById($id);
         }
@@ -34,15 +34,14 @@ class DownloadarchiveModel extends Model
         $values = [$id, 1, $time,$time];
         return static::findOneBy($conditions, $values);
 
-        //old version without check for start/stop:
-        //return static::findOneBy(['id=?', 'published=?'],[$id,1]);
+
 
 
     }
 
     public static function findAllPublished()
     {
-        if (Config::get('showUnpublishedRecords') === true) {
+        if (static::isPreviewMode($options)) {
             return static::findAll();
         }
         return static::findBy(['published' => 1], ['order' => 'title']);
