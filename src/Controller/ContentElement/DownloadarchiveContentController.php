@@ -27,7 +27,9 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsContentElement(type: 'downloadarchive', category: 'downloadarchive', template: 'content_element/content_downloadarchive')]
+// this causes problems, better without  naming a static template:
+// #[AsContentElement(type: 'downloadarchive', category: 'downloadarchive', template: 'content_element/content_downloadarchive')]
+#[AsContentElement(type: 'downloadarchive', category: 'downloadarchive')]
 class DownloadarchiveContentController extends AbstractContentElementController
 {
     public function __construct( private readonly DownloadarchiveFrontendProvider $downloadarchiveFrontendProvider){

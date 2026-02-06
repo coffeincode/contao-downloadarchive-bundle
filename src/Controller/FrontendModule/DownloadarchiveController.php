@@ -25,7 +25,10 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsFrontendModule(type: 'downloadarchive', category: 'downloadarchive', template: 'frontend_module/downloadarchive_list')]
+
+// this causes problems and makes the template potentially non-customizable. Better without naming a template.
+//#[AsFrontendModule(type: 'downloadarchive', category: 'downloadarchive', template: 'frontend_module/downloadarchive_list')]
+#[AsFrontendModule(type: 'downloadarchive', category: 'downloadarchive',)]
 class DownloadarchiveController extends AbstractFrontendModuleController
 {
     public function __construct( private readonly DownloadarchiveFrontendProvider $downloadarchiveFrontendProvider){
@@ -37,7 +40,6 @@ class DownloadarchiveController extends AbstractFrontendModuleController
         $fileModel = null;
         $filePath = null;
         $archiveIds = null;
-
 
         if ($model->downloadarchive) {
             $archiveIds = StringUtil::deserialize($model->downloadarchive);
