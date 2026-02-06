@@ -36,10 +36,13 @@ class DownloadarchiveitemModel extends Model
         $time = Date::floorToMinute();
         $columns = ["$t.pid IN (" . implode(',', array_map('intval',$pids)) . ")",
             "$t.published=1",
-            "($t.start<=? OR $t.start='')",
-            "($t.stop>=? OR $t.stop='')"
+            "($t.start<=? OR $t.start= ''  )",
+            "($t.stop>=? OR $t.stop= '' )"
         ];
+
+
         $values = [$time,$time];
+
         return static::findBy($columns,$values, $options);
     }
 

@@ -27,6 +27,7 @@ class DownloadarchiveFrontendProvider{
     }
     public function getItemsForTemplate(int $modelId, array $archiveIds,string $downloadSorting, int $downloadNumberOfItems, int $perPage): array
     {
+        $items = [];
         if (count($archiveIds)!=0) {
             $archives = [];
             foreach ($archiveIds as $archiveId) {
@@ -35,9 +36,7 @@ class DownloadarchiveFrontendProvider{
                 if ($tmpModel !== null) {
                     $archives[] =$tmpModel->id;
                 }
-
             }
-
         }
 
 
@@ -51,43 +50,43 @@ class DownloadarchiveFrontendProvider{
                 $arrOptions = ['order' => $downloadSorting];
             }
 
+            $maxAmount = DownloadarchiveitemModel::countPublishedByPids($archives);
 
-            if ($perPage > 0) {
-                $total = $downloadNumberOfItems!=0 ? $downloadNumberOfItems : DownloadarchiveitemModel::countByPids($archives);
-                $param = 'page_n'.$modelId;
-                $page = (int) (Input::get($param) ?? 1);
+            if ($perPage > 0 && $perPage<$maxAmount) {
+
+                $total = $downloadNumberOfItems != 0 ? $downloadNumberOfItems : $maxAmount;
+                if ($total > $maxAmount) {
+                    $total = $maxAmount;
+                }
+
+                $param = 'page_n' . $modelId;
+                $page = (int)(Input::get($param) ?? 1);
 
                 if ($page < 1 || $page > max(ceil($total / $perPage), 1)) {
-                    throw new PageNotFoundException('Page not found: '.Environment::get('uri'));
-                }else if ($page == intval(ceil($total / $perPage)) ){
+                    throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+                } else if ($page == intval(ceil($total / $perPage))) {
                     //in this case only total  % perpage is left to display as we are on the last page
-                    $arrOptions['limit'] = $total%$perPage;
+                    $arrOptions['limit'] = $total % $perPage;
+                } else {
+                    $arrOptions['limit'] = $perPage;
                 }
-                else $arrOptions['limit'] = $perPage;
 
                 $offset = ($page - 1) * $perPage;
-
                 $arrOptions['offset'] = $offset;
-
-
                 $pagination = new Pagination($total, $perPage, Config::get('maxPaginationLinks'), $param);
                 /// leave the addition to the template in the controller, here only the object is created!
                 /// $template->set('pagination', $pagination->generate("\n  "));
-
             }
             else  $pagination = new Pagination(0,0, Config::get('maxPaginationLinks'),"1");
-
-
 
             $collection = DownloadarchiveitemModel::findPublishedByPids($archives, $arrOptions);
 
             if ($collection !== null) {
 
-
                 //todo: change to dependency injection
                 /** @var Studio $studio */
                 $studio = System::getContainer()->get('contao.image.studio');
-                //$test = "Hallo Welt!";
+
                 foreach ($collection as $item) {
 
                     if ($item->protected){
@@ -154,9 +153,10 @@ class DownloadarchiveFrontendProvider{
                 }
 
             }
+           //die();
         }else
         {
-        return [[], []];
+            return [[], []];
         }
         return [$items,$pagination];
     }
