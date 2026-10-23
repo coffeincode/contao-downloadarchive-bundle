@@ -139,6 +139,7 @@ class DownloadarchiveFrontendProvider{
                         'filePath' => $filePath,
                         'filesize' => $filesize,
                         'fileDate' => $item->tstamp,
+                        'fileName' => $fileName,
                         'downloadHref' => $downloadHref,
                         'href' => $href,
                         'addImage' => (bool)$item->addImage,
