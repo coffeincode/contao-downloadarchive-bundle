@@ -104,6 +104,7 @@ class DownloadarchiveFrontendProvider{
                     $figure = null;
                     $fileModel = FilesModel::findByUuid($item->singleSRC);
                     $filePath = $fileModel?->path;
+                    $fileName = $fileModel?->name;
                     $downloadHref = null;
                     if ($filePath) {
                         $href = Environment::get('base') . '/' . $filePath;
