@@ -107,7 +107,7 @@ class DownloadarchiveFrontendProvider{
                     $fileName = $fileModel?->name;
                     $downloadHref = null;
                     if ($filePath) {
-                        $href = Environment::get('base') . '/' . $filePath;
+                        $href = Environment::get('base') .  $filePath;
                     }
 
                     if ($item->addImage) {
